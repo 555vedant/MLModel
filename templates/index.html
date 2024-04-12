@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Accident Prediction</title>
+  </head>
+  <body>
+    <h1>AP</h1>
+    <h2>Prediction</h2>
+    <form id="predictionForm">
+      <label for="weather">Weather:</label>
+      <select id="weather" name="weather">
+        <option value="0">Clear</option>
+        <option value="1">Cloudy</option>
+        <option value="2">Dust Storm</option>
+        <option value="3">Fine</option>
+        <option value="4">Flooding of Slipways/Rivulets</option>
+        <option value="5">Fog / Mist</option>
+        <option value="6">Hail or Sleet</option>
+        <option value="7">Heavy Rain</option>
+        <option value="8">Light Rain</option>
+        <option value="9">Mist or Fog</option>
+        <option value="10">Others</option>
+        <option value="11">Snow</option>
+        <option value="12">Strong Wind</option>
+        <option value="13">Very Cold</option>
+        <option value="14">Very Hot</option>
+        <option value="15">Wind</option></select
+      ><br /><br />
+
+      <label for="district">District:</label>
+      <select id="district" name="district">
+        <option value="0">Bagalkot</option>
+        <option value="1">Ballari (Bellary)</option>
+        <option value="2">Belagavi City (Belgaum)</option>
+        <option value="3">Belagavi Dist (Belgaum)</option>
+        <option value="4">Bengaluru City</option>
+        <option value="5">Bengaluru Dist</option>
+        <option value="6">Bidar</option>
+        <option value="7">Chamarajanagar</option>
+        <option value="8">Chickballapura (Chikkaballapur)</option>
+        <option value="9">Chikkamagaluru (Chikmagalur)</option>
+        <option value="10">Chitradurga</option>
+        <option value="11">Dakshina Kannada</option>
+        <option value="12">Davanagere</option>
+        <option value="13">Dharwad</option>
+        <option value="14">Gadag</option>
+        <option value="15">Hassan</option>
+        <option value="16">Haveri</option>
+        <option value="17">Hubballi Dharwad City</option>
+        <option value="18">K.G.F</option>
+        <option value="19">Kalaburagi (Gulbarga)</option>
+        <option value="20">Kalaburagi City (Gulbarga)</option>
+        <option value="21">Karnataka Railways</option>
+        <option value="22">Kodagu (Coorg)</option>
+        <option value="23">Kolar</option>
+        <option value="24">Koppal</option>
+        <option value="25">Mandya</option>
+        <option value="26">Mangaluru City</option>
+        <option value="27">Mysuru City (Mysore)</option>
+        <option value="28">Mysuru Dist (Mysore)</option>
+        <option value="29">Raichur</option>
+        <option value="30">Ramanagara</option>
+        <option value="31">Shivamogga (Shimoga)</option>
+        <option value="32">Tumakuru (Tumkur)</option>
+        <option value="33">Udupi</option>
+        <option value="34">Uttara Kannada (Karwar)</option>
+        <option value="35">Vijayanagara</option>
+        <option value="36">Vijayapur (Bijapur)</option>
+        <option value="37">Yadgir</option>
+      </select>
+      <br /><br />
+
+      <label>Number Of Vehicles:</label><br />
+      <input
+        type="text"
+        name="numberOfVehicles"
+        id="numberOfVehicles"
+      /><br /><br />
+
+      <label>Latitude:</label><br />
+      <input type="text" name="latitude" id="latitude" /><br /><br />
+
+      <label>Longitude:</label><br />
+      <input type="text" name="longitude" id="longitude" /><br /><br />
+
+      <input type="submit" value="Predict" /><br /><br />
+    </form>
+
+    <div id="prediction_result">r</div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("predictionForm")
+          .addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            // Extract form data
+            let weather = document.getElementById("weather").value;
+            let district = document.getElementById("district").value;
+            let numberOfVehicles =
+              document.getElementById("numberOfVehicles").value;
+            let latitude = document.getElementById("latitude").value;
+            let longitude = document.getElementById("longitude").value;
+
+            // Prepare data to send
+            const dataToSend = {
+              district: district,
+              weather: weather,
+              numberOfVehicles: numberOfVehicles,
+              latitude: latitude,
+              longitude: longitude,
+            };
+
+            try {
+              const response = await fetch("/predict", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(dataToSend),
+              });
+
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+
+              const data = await response.json();
+              alert(`Prediction: ${data.prediction}`);
+            } catch (error) {
+              console.error("Error predicting:", error);
+              alert("Prediction failed");
+            }
+          });
+          document.getElementById('prediction_result').innerText = `Predicted Severity: ${prediction}`;
+      });
+    </script>
+  </body>
+</html>
